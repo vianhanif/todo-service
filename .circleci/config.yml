@@ -47,5 +47,4 @@ jobs:
 
       - run:
           command: |
-            GO111MODULE="on" go get github.com/mattn/goveralls
             goveralls -coverprofile=/tmp/coverage.out -service=circle-ci -repotoken=$COVERALLS_TOKEN
