@@ -6,7 +6,7 @@ jobs:
   build:
     docker:
       # specify the version
-      - image: circleci/golang:1.11
+      - image: circleci/golang:1.12
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
@@ -19,7 +19,7 @@ jobs:
     #### expecting it in the form of
     ####   /go/src/github.com/circleci/go-tool
     ####   /go/src/bitbucket.org/circleci/go-tool
-    working_directory: /go/src/github.com/vianhanif/todo-service
+    working_directory: github.com/vianhanif/todo-service
     steps:
       - checkout
 
@@ -35,12 +35,12 @@ jobs:
             done
             echo Failed waiting for Postgres && exit 1
       - run:
-          command: ./build/migrate.sh
+          command: sh ./build/migrate.sh
           environment:
               TODO_DB: "dbname=sample host=127.0.0.1 sslmode=disable user=postgres"
 
       - run:
-          command: ./build/test.sh
+          command: sh ./build/test.sh
           environment:
               TODO_DB: "dbname=sample host=127.0.0.1 sslmode=disable user=postgres"
 
