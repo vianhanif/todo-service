@@ -14,10 +14,11 @@ require (
 	github.com/golang-migrate/migrate v3.5.4+incompatible
 	github.com/icrowley/fake v0.0.0-20180203215853-4178557ae428
 	github.com/lib/pq v1.2.0
+	github.com/mattn/goveralls v0.0.2 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/opencontainers/go-digest v1.0.0-rc1 // indirect
 	github.com/prometheus/client_golang v1.1.0
 	github.com/vianhanif/go-pkg v0.0.0-20190925132710-ec9d7204d8e7
-	golang.org/x/net v0.0.0-20190620200207-3b0461eec859 // indirect
+	golang.org/x/tools v0.0.0-20190925134113-a044388aa56f // indirect
 )
