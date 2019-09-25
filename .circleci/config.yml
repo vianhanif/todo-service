@@ -6,8 +6,9 @@ jobs:
   build:
     docker:
       # specify the version
-      - image: circleci/golang:1.11
-
+      - image: circleci/golang:1.12
+        environment:
+          GO111MODULE: "on"
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
@@ -47,5 +48,5 @@ jobs:
 
       - run:
           command: |
-            GO111MODULE=on go get github.com/mattn/goveralls
+            go get github.com/mattn/goveralls
             $GOPATH/bin/goveralls -coverprofile=/tmp/coverage.out -service=circle-ci -repotoken=$COVERALLS_TOKEN
