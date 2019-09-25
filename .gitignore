@@ -5,5 +5,5 @@
 /.container-*
 /.dockerfile-*
 
-/.env
+*.env
 .vscode
