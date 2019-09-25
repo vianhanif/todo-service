@@ -3,7 +3,7 @@ module github.com/vianhanif/todo-service
 go 1.12
 
 require (
-	github.com/bxcodec/faker/v3 v3.1.0
+	github.com/bxcodec/faker/v3 v3.1.0 // indirect
 	github.com/corpix/uarand v0.1.1 // indirect
 	github.com/go-chi/chi v4.0.2+incompatible
 	github.com/go-chi/cors v1.0.0
