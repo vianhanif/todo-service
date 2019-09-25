@@ -43,8 +43,3 @@ jobs:
           command: sh ./build/test.sh
           environment:
               TODO_DB: "dbname=sample host=127.0.0.1 sslmode=disable user=postgres"
-
-      - run:
-          command: |
-            GO111MODULE="off" go get github.com/mattn/goveralls
-            goveralls -coverprofile=/tmp/coverage.out -service=circle-ci -repotoken=$COVERALLS_TOKEN
