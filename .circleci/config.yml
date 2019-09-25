@@ -45,4 +45,6 @@ jobs:
               TODO_DB: "dbname=sample host=127.0.0.1 sslmode=disable user=postgres"
 
       - run:
-          command: goveralls -coverprofile=/tmp/coverage.out -service=circle-ci -repotoken=$COVERALLS_TOKEN
+          command: |
+            GO111MODULE="on" go get github.com/mattn/goveralls
+            goveralls -coverprofile=/tmp/coverage.out -service=circle-ci -repotoken=$COVERALLS_TOKEN
