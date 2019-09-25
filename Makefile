@@ -15,6 +15,5 @@ container:
 	@docker build --label "version=$(VERSION)" -t $(IMAGE):$(VERSION) -f ./docker/Dockerfile .
 
 push:
-  @echo "publishing image..."
 	@docker tag $(IMAGE):$(VERSION) localhost:5000/$(IMAGE):$(VERSION)
 	@docker push $(IMAGE):$(VERSION)
