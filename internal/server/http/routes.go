@@ -56,6 +56,7 @@ func (hs *Server) compileRouter(config *config.Config) chi.Router {
 		g.With(
 			middleware.Private(config),
 		).Route("/private/v1", func(r chi.Router) {
+			addInstrument(r, "GET", "/todos", handlers.List())
 			addInstrument(r, "POST", "/todos", handlers.Create())
 		})
 	})
