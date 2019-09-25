@@ -7,8 +7,6 @@ jobs:
     docker:
       # specify the version
       - image: circleci/golang:1.11
-        environment:
-          GO111MODULE: "off"
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
@@ -37,16 +35,16 @@ jobs:
             done
             echo Failed waiting for Postgres && exit 1
       - run:
-          command: sh ./build/migrate.sh
+          command: ./build/migrate.sh
           environment:
               TODO_DB: "dbname=sample host=127.0.0.1 sslmode=disable user=postgres"
 
       - run:
-          command: sh ./build/test.sh
+          command: ./build/test.sh
           environment:
               TODO_DB: "dbname=sample host=127.0.0.1 sslmode=disable user=postgres"
 
       - run:
           command: |
             go get github.com/mattn/goveralls
-            $GOPATH/bin/goveralls -coverprofile=/tmp/coverage.out -service=circle-ci -repotoken=$COVERALLS_TOKEN
+            goveralls -coverprofile=/tmp/coverage.out -service=circle-ci -repotoken=$COVERALLS_TOKEN
