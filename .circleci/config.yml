@@ -36,12 +36,12 @@ jobs:
             done
             echo Failed waiting for Postgres && exit 1
       - run:
-          command: build/migrate.sh
+          command: sh ./build/migrate.sh
           environment:
               TODO_DB: "dbname=sample host=127.0.0.1 sslmode=disable user=postgres"
 
       - run:
-          command: build/test.sh
+          command: sh ./build/test.sh
           environment:
               TODO_DB: "dbname=sample host=127.0.0.1 sslmode=disable user=postgres"
 
