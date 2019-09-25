@@ -2,7 +2,6 @@ package v1
 
 import (
 	"context"
-	"strings"
 
 	"github.com/vianhanif/go-pkg/sql/helper"
 
@@ -16,7 +15,7 @@ type Service interface {
 	List(ctx context.Context, filters ...helper.QueryFilter) (records []*todo.Todo, err error)
 	Find(ctx context.Context, filters ...helper.QueryFilter) (records *todo.Todo, err error)
 	Update(ctx context.Context, item *todo.Todo) (record *todo.Todo, err error)
-	Delete(ctx context.Context, filters ...helper.QueryFilter) error
+	Delete(ctx context.Context, ID int) error
 }
 
 // App .
@@ -32,14 +31,14 @@ func (s *App) Create(ctx context.Context, item *todo.Todo) (record *todo.Todo, e
 
 // List .
 func (s *App) List(ctx context.Context, filters ...helper.QueryFilter) ([]*todo.Todo, error) {
-	where, args := helper.BuildFilter(filters...)
-	return s.todo.Where(ctx, strings.Split(where, "WHERE")[1], args...)
+	where, _ := helper.BuildFilter(filters...)
+	return s.todo.FindAll(ctx, where.Offset(), where.Limit(), where.OrderBy())
 }
 
 // Find .
 func (s *App) Find(ctx context.Context, filters ...helper.QueryFilter) (record *todo.Todo, err error) {
 	where, args := helper.BuildFilter(filters...)
-	return s.todo.Single(ctx, strings.Split(where, "WHERE")[1], args...)
+	return s.todo.Single(ctx, where.String(), args...)
 }
 
 // Update .
@@ -48,13 +47,8 @@ func (s *App) Update(ctx context.Context, item *todo.Todo) (*todo.Todo, error) {
 }
 
 // Delete .
-func (s *App) Delete(ctx context.Context, filters ...helper.QueryFilter) error {
-	where, args := helper.BuildFilter(filters...)
-	record, err := s.todo.First(ctx, strings.Split(where, "WHERE")[1], args...)
-	if err != nil {
-		return err
-	}
-	return s.todo.Delete(ctx, record.ID)
+func (s *App) Delete(ctx context.Context, ID int) error {
+	return s.todo.Delete(ctx, ID)
 }
 
 // NewService .

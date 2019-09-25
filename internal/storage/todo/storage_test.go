@@ -421,7 +421,7 @@ func TestFindAll(t *testing.T) {
 	dbCtx := queryable.NewContext(context.TODO(), db)
 
 	storage := todo.NewStorage(db)
-	result, err := storage.FindAll(dbCtx)
+	result, err := storage.FindAll(dbCtx, 1, 10, "created_at")
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when querying data", err)
 	}

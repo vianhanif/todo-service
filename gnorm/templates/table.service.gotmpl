@@ -141,8 +141,8 @@ func (s *{{$service}}) WhereNoFilter (ctx context.Context, query string, args ..
 {{- $model := title .Table.Name}} 
 {{- $service := "Service"}}
 // FindAll , find all {{$model}} records.
-func (s *{{$service}}) FindAll(ctx context.Context) ([]*{{$model}}, error) { 
-    return s.s.FindAll(ctx)
+func (s *{{$service}}) FindAll(ctx context.Context, page, size int, order string) ([]*{{$model}}, error) { 
+    return s.s.FindAll(ctx, page, size, order)
 }
 {{- end}}
 

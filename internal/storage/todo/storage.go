@@ -165,9 +165,18 @@ func (s *Storage) WhereNoFilter(ctx context.Context, query string, args ...inter
 }
 
 // FindAll , find all Todo records.
-func (s *Storage) FindAll(ctx context.Context) ([]*Todo, error) {
+func (s *Storage) FindAll(ctx context.Context, page, size int, order string) ([]*Todo, error) {
 	q := s.pickQueryable(ctx)
-	stmt := fmt.Sprintf(`%s WHERE %s`, selectQuery(), defaultFilter())
+	limit := size
+	if limit < 1 {
+		limit = 20
+	}
+	offset := page
+	if offset < 1 {
+		offset = 1
+	}
+	offset = (offset - 1) * limit
+	stmt := fmt.Sprintf(`%s WHERE %s ORDER BY %s LIMIT %v OFFSET %v`, selectQuery(), defaultFilter(), order, limit, offset)
 	rows, err := q.QueryContext(ctx, stmt)
 
 	if err != nil {

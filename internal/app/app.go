@@ -22,7 +22,7 @@ type App struct {
 
 // Storages .
 type Storages struct {
-	Todo todo.IStorage
+	Todo *todo.Storage
 }
 
 // Services .

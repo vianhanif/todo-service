@@ -51,8 +51,8 @@ func (s *Service) WhereNoFilter(ctx context.Context, query string, args ...inter
 }
 
 // FindAll , find all Todo records.
-func (s *Service) FindAll(ctx context.Context) ([]*Todo, error) {
-	return s.s.FindAll(ctx)
+func (s *Service) FindAll(ctx context.Context, page, size int, order string) ([]*Todo, error) {
+	return s.s.FindAll(ctx, page, size, order)
 }
 
 // FindByKeys , find Todo using it's primary key(s).

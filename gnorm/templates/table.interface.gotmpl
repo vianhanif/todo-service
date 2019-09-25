@@ -106,7 +106,7 @@ WhereNoFilter (ctx context.Context, query string, args ...interface{}) ([]*{{$mo
 {{- $model := title .Table.Name}} 
 {{- $service := "Service"}}
 // FindAll , find all {{$model}} records.
-FindAll(ctx context.Context) ([]*{{$model}}, error)
+FindAll(ctx context.Context, page, size int, order string) ([]*{{$model}}, error)
 {{- end}}
 
 {{- /* FindByKeys function */ -}} 

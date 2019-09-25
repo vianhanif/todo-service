@@ -24,7 +24,7 @@ type IStorage interface {
 	// WhereNoFilter , find all Todo records matching with condition specified by query and args.
 	WhereNoFilter(ctx context.Context, query string, args ...interface{}) ([]*Todo, error)
 	// FindAll , find all Todo records.
-	FindAll(ctx context.Context) ([]*Todo, error)
+	FindAll(ctx context.Context, page, size int, order string) ([]*Todo, error)
 	// FindByKeys , find Todo using it's primary key(s).
 	FindByKeys(ctx context.Context, id int) (*Todo, error)
 	// FindByKeysNoFilter , find Todo using it's primary key(s).
