@@ -1,0 +1,42 @@
+{{- $package := replace (toLower .Enum.DBName) "_" "" -1}} 
+{{- $type := replace (pascal .Enum.Name) "_" "" -1}}
+{{- $values := .Enum.Values}}
+// Package {{$package}} ...
+// template version: 1.0.9
+package {{$package}}  
+
+import(
+    "database/sql"
+    "time"
+
+    "github.com/lib/pq"
+)  
+
+type {{$type}} string 
+var order = []{{$type}}{
+    {{- range $index, $val := .Enum.Values }}   
+        {{replace (pascal $val.Name) "_" "" -1}}
+        {{- if lt $index (len $values) }}, {{end}}
+    {{- end}}
+}
+var values = map[{{$type}}]string{
+    {{- range $index, $val := .Enum.Values }}   
+        {{replace (pascal $val.Name) "_" "" -1}} : "{{$val.DBName -}}"
+        {{- if lt $index (len $values) }}, {{end}}
+    {{- end}}
+}
+
+const(
+{{- range .Enum.Values }}   
+    // {{pascal .Name}}      
+    {{replace (pascal .Name) "_" "" -1}} {{$type}}= {{$type}}("{{.DBName}}")
+{{- end}}
+)
+
+func (e {{$type}}) String() string {
+    return values[e]
+}
+
+func Default() {{$type}} { 
+    return order[0]
+}

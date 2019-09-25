@@ -1,0 +1,9 @@
+### Docker ###
+/bin
+/.go
+/.push-*
+/.container-*
+/.dockerfile-*
+
+/.env
+.vscode

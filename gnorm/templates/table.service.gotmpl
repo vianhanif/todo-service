@@ -1,0 +1,231 @@
+// template version: 1.0.9
+{{- $repository := .Params.repository}}
+{{- $package := toLower .Table.Name}} 
+{{- $model := title .Table.Name}} 
+{{- $service := "Service"}}
+{{- $storage := pascal (print "Storage")}}
+package {{$package}}    
+
+import (
+	"context" 
+	"{{$repository}}/internal/storage"
+)
+ 
+// {{$service}} ,{{.Table.Comment}}
+type {{$service}} struct { 
+    q storage.Queryable
+    s *{{$storage}}
+}
+
+{{- template "func_single" .}}
+{{- template "func_first" .}}
+{{- template "func_first_order" .}}
+{{- template "func_where" .}}
+{{- template "func_where_order" .}}
+{{- template "func_where_with_paging" .}} 
+{{- template "func_where_no_filter" .}}
+{{- template "func_find_all" .}}
+
+{{- if .Table.HasPrimaryKey}} 
+{{- template "func_find_by_keys" .}}
+{{- template "func_create" .}}
+{{- template "func_update" .}}
+{{- template "func_delete" .}}
+{{- template "func_save" .}}
+{{- template "func_find_by_keys_no_filter" .}}
+{{- end}}
+  
+// NewService , returns new Service.
+func NewService(q storage.Queryable) *{{$service}}{
+    s := NewStorage(q)
+    service := &{{$service}}{
+        q: q,
+        s : s,
+    }
+    return service
+}
+
+{{- /*
+template for functions that require pk parameters e.g: FindByKeys, Delete
+ex: PK1 int, PK2 string, PK3 string
+*/ -}}
+{{- define "pk_parameters"}}
+    {{- range $index, $pk := .PrimaryKeys}}
+        {{- if $index}},{{end -}} 
+            {{- printf "%v %v" ($pk.Name) $pk.Type}} 
+    {{- end}}
+{{- end}}
+
+{{- /* Validate function */ -}}
+{{- define "func_validate"}} 
+{{- $service := "Service"}}
+func (s *{{$service}}) Validate(ctx context.Context, args ...interface{}) error {
+
+}
+{{- end}}
+
+{{- /* Single function */ -}} 
+{{- define "func_single"}}
+{{- $model := title .Table.Name}} 
+{{- $service := "Service"}}
+// Single , find single {{$model}} record matching with condition specified by query and args.
+func (s *{{$service}}) Single (ctx context.Context, query string, args ...interface{}) (*{{$model}}, error) {
+    return s.s.Single(ctx, query, args...)
+}
+{{- end}}
+
+{{- /* First function */ -}} 
+{{- define "func_first"}}
+{{- $model := title .Table.Name}} 
+{{- $service := "Service"}}
+// First , find first {{$model}} record matching with condition specified by query and args.
+func (s *{{$service}}) First (ctx context.Context, query string, args ...interface{}) (*{{$model}}, error) {
+    return s.s.First(ctx, query, args...)
+}
+{{- end}}
+
+{{- /* FirstOrder function */ -}} 
+{{- define "func_first_order"}}
+{{- $model := title .Table.Name}} 
+{{- $service := "Service"}}
+// FirstOrder , find first {{$model}} record matching with condition specified by query and args, and ordered.
+func (s *{{$service}}) FirstOrder (ctx context.Context, query, order string, args ...interface{}) (*{{$model}}, error) {
+    return s.s.FirstOrder(ctx, query, order, args...)
+}
+{{- end}}
+
+{{- /* Where function */ -}} 
+{{- define "func_where"}}
+{{- $model := title .Table.Name}} 
+{{- $service := "Service"}}
+// Where , find all {{$model}} records matching with condition specified by query and args.
+func (s *{{$service}}) Where (ctx context.Context, query string, args ...interface{}) ([]*{{$model}}, error) {
+    return s.s.Where(ctx, query, args...)
+}
+{{- end}}
+
+{{- /* WhereOrder function */ -}} 
+{{- define "func_where_order"}}
+{{- $model := title .Table.Name}} 
+{{- $service := "Service"}}
+// WhereOrder , find all {{$model}} records matching with condition specified by query and args, and ordered.
+func (s *{{$service}}) WhereOrder (ctx context.Context, query, order string, args ...interface{}) ([]*{{$model}}, error) {
+    return s.s.WhereOrder(ctx, query, order, args...)
+}
+{{- end}}
+
+{{- /* WhereWithPaging function */ -}} 
+{{- define "func_where_with_paging"}}
+{{- $model := title .Table.Name}} 
+{{- $service := "Service"}}
+// WhereWithPaging , find all {{$model}} records matching with condition specified by query and args limiting the result specified by size
+// when size has value less than 1, the function will use default value 20 for size.
+// when page has value less than 1, the function will use default value 1 for page. page has base index 1
+func (s *{{$service}}) WhereWithPaging (ctx context.Context, page, size int, query, order string, args ...interface{}) ([]*{{$model}}, error) {
+    return s.s.WhereWithPaging(ctx, page, size, query, order, args...)
+}
+{{- end}}
+
+{{- /* WhereNoFilter function */ -}} 
+{{- define "func_where_no_filter"}}
+{{- $model := title .Table.Name}} 
+{{- $service := "Service"}}
+// WhereNoFilter , find all {{$model}} records matching with condition specified by query and args.
+func (s *{{$service}}) WhereNoFilter (ctx context.Context, query string, args ...interface{}) ([]*{{$model}}, error) {
+    return s.s.WhereNoFilter(ctx, query, args...)
+}
+{{- end}}
+
+{{- /* FindAll function */ -}} 
+{{- define "func_find_all"}}
+{{- $model := title .Table.Name}} 
+{{- $service := "Service"}}
+// FindAll , find all {{$model}} records.
+func (s *{{$service}}) FindAll(ctx context.Context) ([]*{{$model}}, error) { 
+    return s.s.FindAll(ctx)
+}
+{{- end}}
+
+{{- /* FindByKeys function */ -}} 
+{{- define "func_find_by_keys"}}
+{{- $model := title .Table.Name}} 
+{{- $service := "Service"}}
+{{- $parameter := print "p" $model}}
+// FindByKeys , find {{$model}} using it's primary key(s).
+func (s *{{$service}}) FindByKeys(ctx context.Context, {{template "pk_parameters" .Table}}) (*{{$model}}, error){
+    {{- $params := join (.Table.PrimaryKeys.Names.Sprintf "%s") ","}}
+    return s.s.FindByKeys(ctx, {{$params}})
+}
+{{- end}}
+
+{{- /* Create function */ -}} 
+{{- define "func_create"}}
+{{- $model := title .Table.Name}} 
+{{- $service := "Service"}}
+{{- $parameter := print "p" $model}}
+// Create , create new {{$model}} record.
+func (s *{{$service}}) Create(ctx context.Context, {{$parameter}} *{{$model}}) error {
+    return s.s.Create(ctx, {{$parameter}})
+}
+{{- end}}
+
+{{- /* Update function */ -}} 
+{{- define "func_update"}}
+{{- $model := title .Table.Name}} 
+{{- $service := "Service"}}
+{{- $parameter := print "p" $model}}
+// Update , update {{$model}} record.
+func (s *{{$service}}) Update(ctx context.Context, {{$parameter}} *{{$model}}) error {
+    return s.s.Update(ctx, {{$parameter}})
+}
+{{- end}}
+
+{{- /* Delete function */ -}} 
+{{- define "func_delete"}}
+{{- if .Params.deletedAt}}
+{{- $model := title .Table.Name}} 
+{{- $service := "Service"}}
+{{- $parameter := print "p" $model}}
+// Delete , remove {{$model}} using it's primary key(s).
+func (s *{{$service}}) Delete(ctx context.Context, {{template "pk_parameters" .Table}}) error    {
+    {{- $params := join (.Table.PrimaryKeys.Names.Sprintf "%s") ","}}
+    return s.s.Delete(ctx, {{$params}})
+}
+{{end}}
+{{- end}}
+
+{{- /* Save function */ -}} 
+{{- define "func_save"}}
+{{- $model := title .Table.Name}} 
+{{- $service := "Service"}}
+{{- $parameter := print "p" $model}}
+// Save , create new {{$model}} if it doesn't exist or update if exists.
+func (s *{{$service}}) Save(ctx context.Context, {{$parameter}} *{{$model}}) error{
+    return s.s.Save(ctx, {{$parameter}})
+}
+{{- end}}
+
+{{- /* FindByKeysNoFilter function */ -}} 
+{{- define "func_find_by_keys_no_filter"}}
+{{- $model := title .Table.Name}} 
+{{- $service := "Service"}} 
+// FindByKeysNoFilter , find {{$model}} using it's primary key(s).
+func (s *{{$service}}) FindByKeysNoFilter(ctx context.Context, {{template "pk_parameters" .Table}}) (*{{$model}}, error){
+    {{- $params := join (.Table.PrimaryKeys.Names.Sprintf "%s") ","}}
+    return s.s.FindByKeysNoFilter(ctx, {{$params}})
+}
+{{- end}}
+ 
+type key int
+const ctxKey key = 0
+
+// NewContext , return new context with s.
+func NewContext(ctx context.Context, s *{{$service}}) context.Context {
+	return context.WithValue(ctx, ctxKey, s)
+}
+
+// FromContext , return a service from a context.
+func FromContext(ctx context.Context) (*{{$service}}, bool) {
+	service, ok := ctx.Value(ctxKey).(*{{$service}})
+	return service, ok
+}

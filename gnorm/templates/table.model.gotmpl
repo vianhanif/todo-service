@@ -1,0 +1,26 @@
+// template version: 1.0.9
+{{- $package := toLower .Table.Name}}
+{{- $type := title .Table.Name}}
+package {{$package}}  
+
+import(
+    "database/sql"
+    "time"
+
+    "github.com/lib/pq"
+)
+
+// {{$type}} ,{{.Table.Comment}}
+{{- $ignores :=printf "%v" .Params.ignoreFields}}
+{{- $ignores := fields (sliceString $ignores 1 (sub (len $ignores) 1))}} 
+{{- $columns := .Table.Columns.DBNames.Except $ignores }} 
+type {{$type}} struct {  
+{{- range $index, $col := .Table.Columns }} 
+    {{- range $iindex, $icol := $columns }}
+    {{- if eq $icol $col.DBName }}
+    // {{pascal $col.Name}} ,{{$col.Comment}}     
+    {{pascal $col.Name}} {{ if $col.IsArray}}[]{{end}}{{if $col.UserDefined}}{{replace (toLower $col.DBType) "_" "" -1}}.{{replace (pascal $col.DBType) "_" "" -1}}{{else}}{{$col.Type}}{{end}} `json:"{{camel $col.Name}}"`
+{{- end}}
+{{- end}}
+{{- end}}
+} 
