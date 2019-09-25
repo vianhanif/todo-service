@@ -20,7 +20,7 @@ jobs:
     #### expecting it in the form of
     ####   /go/src/github.com/circleci/go-tool
     ####   /go/src/bitbucket.org/circleci/go-tool
-    working_directory: github.com/vianhanif/todo-service
+    working_directory: /go/src/github.com/vianhanif/todo-service
     steps:
       - checkout
 
@@ -35,6 +35,7 @@ jobs:
               sleep 1
             done
             echo Failed waiting for Postgres && exit 1
+      - run: go get
       - run:
           command: sh ./build/migrate.sh
           environment:
