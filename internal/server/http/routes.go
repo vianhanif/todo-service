@@ -58,6 +58,9 @@ func (hs *Server) compileRouter(config *config.Config) chi.Router {
 		).Route("/private/v1", func(r chi.Router) {
 			addInstrument(r, "GET", "/todos", handlers.List())
 			addInstrument(r, "POST", "/todos", handlers.Create())
+			addInstrument(r, "GET", "/todos/:id", handlers.Find())
+			// addInstrument(r, "PUT", "/todos/:id", handlers.Create())
+			// addInstrument(r, "DELETE", "/todos/:id", handlers.Create())
 		})
 	})
 

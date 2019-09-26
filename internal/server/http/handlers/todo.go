@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/go-chi/chi"
+
 	"github.com/vianhanif/go-pkg/sql/helper"
 
 	"github.com/vianhanif/todo-service/errors"
@@ -79,6 +81,35 @@ func List() http.HandlerFunc {
 		}
 
 		response.JSON(w, http.StatusOK, list)
+		return nil
+	})
+}
+
+// Find .
+func Find() http.HandlerFunc {
+	return Handler(func(w http.ResponseWriter, r *http.Request) error {
+		ctx := r.Context()
+		app := app.FromContext(ctx)
+
+		ID := chi.URLParam(r, "id")
+		params := []helper.QueryFilter{
+			helper.QueryFilter{Key: "id", Value: ID},
+		}
+
+		filters, anyBadRequest := helper.GetQueries(r,
+			params,     // available filters
+			[]string{}, // required params
+		)
+		if anyBadRequest != nil {
+			return anyBadRequest
+		}
+
+		record, err := app.Services.Todo.Find(ctx, filters...)
+		if err != nil {
+			return errors.NewServiceError("Proses gagal. Silahkan mencoba beberapa saat lagi")
+		}
+
+		response.JSON(w, http.StatusOK, record)
 		return nil
 	})
 }
